@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+<config>
+<priceRange>li[data-option-array-index="4"]</priceRange>
+<area>li[data-option-array-index="8"]</area>
+<category>li[data-option-array-index="1"]</category>
+<business>.card-item.ember-view:nth-of-type(3)</business>
+<gift>.wrapper.relative.top .row div:nth-of-type(6)</gift>
+<receiver>Yossi</receiver>
+<sender>Haim</sender>
+<blessing>המון המון מזל טוב</blessing>
+<mail>sd112ldsd3asda2@gmail.co.il</mail>
+<colorReceiverTab>rgba(250, 180, 66, 1)</colorReceiverTab>
+</config>

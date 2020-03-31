@@ -49,8 +49,7 @@ public class SearchGift {
 
     //scroll to end of page
     public void rollToLastGift(String path) throws Exception {
-        driver.get("https://buyme.co.il/");
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+
         price.click();
         driver.findElement(By.cssSelector(General.readFromFile("priceRange",path))).click();
         category.click();

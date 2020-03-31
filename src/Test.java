@@ -157,6 +157,11 @@ public class Test {
             myTests = extent.startTest("screen");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
 
+            driver.close();
+            String setBrowser = General.readFromFile("browser","E:\\intellij\\BuyMeProject\\browser.xml");  //xml browser path
+            setBrowser(setBrowser);                                                                                        //set browser
+            driver.get("https://buyme.co.il/");
+
             search = new SearchGift(driver);
             //roll to end of page
             search.rollToLastGift("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");

@@ -156,7 +156,7 @@ public class Test {
         public void test05_screenEndOfPage() throws Exception {
             myTests = extent.startTest("screen");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
-            driver.get("https://buyme.co.il/");
+
             search = new SearchGift(driver);
             //roll to end of page
             search.rollToLastGift("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");

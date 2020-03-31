@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 //search for items
 public class SearchGift {
@@ -48,6 +49,8 @@ public class SearchGift {
 
     //scroll to end of page
     public void rollToLastGift(String path) throws Exception {
+        driver.get("https://buyme.co.il/");
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         price.click();
         driver.findElement(By.cssSelector(General.readFromFile("priceRange",path))).click();
         category.click();
@@ -56,7 +59,7 @@ public class SearchGift {
 
         Thread.sleep(1000);
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        for (int i=0; i<2500 ;i++) {
+        for (int i=0; i<2000 ;i++) {
             js.executeScript("javascript:window.scrollBy(0,4)", "");
         }
 

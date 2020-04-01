@@ -30,6 +30,7 @@ public class Test {
         private static ExtentTest myTests;
         //screenshot path
         static String imagePath = "E:\\intellij\\BuyMeProject\\Screenshots\\Test";
+        static String browserXml = "E:\\intellij\\BuyMeProject\\browser.xml";
         private RegistrationScreen signUpToWeb;
         private Login login;
         private SearchGift search;
@@ -60,9 +61,7 @@ public class Test {
 
         @AfterClass
         //closing browser and saves report
-        public static void closeBrowser() throws InterruptedException {
-
-                Thread.sleep(2000);
+        public static void closeBrowser(){
                 driver.close();
                 extent.flush();
         }//end closeBrowser - AfterClass
@@ -79,6 +78,7 @@ public class Test {
             signUpToWeb = new RegistrationScreen(driver);
             String urlMain = "https://buyme.co.il/";
             String urlAfterLogin = signUpToWeb.signUpToBuyMe(General.signUpXml);
+
             //check success of login , url assertion
             try {
                 Assert.assertEquals(urlMain, urlAfterLogin);
@@ -96,7 +96,7 @@ public class Test {
         public void test02_login() throws Exception {
             //set up browser
             driver.close();
-            String setBrowser = General.readFromFile("browser","E:\\intellij\\BuyMeProject\\browser.xml");  //xml browser path
+            String setBrowser = General.readFromFile("browser",browserXml);  //xml browser path
             setBrowser(setBrowser);                                                                                        //set browser
 
             driver.get("https://buyme.co.il/");
@@ -105,66 +105,119 @@ public class Test {
             login = new Login(driver);
             String urlMain = "https://buyme.co.il/";
             String urlAfterLogin = login.loginToWeb(General.signUpXml);
+
             //login check
             try {
                 Assert.assertEquals(urlMain, urlAfterLogin);
                 myTests.log(LogStatus.PASS, name.getMethodName() + ". login completed");
-                myTests.log(LogStatus.PASS, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
             catch (AssertionError e) {
                 myTests.log(LogStatus.ERROR, name.getMethodName() + ". login failed");
                 myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
+
             search = new SearchGift(driver);
-            //search for gift
-            search.searchItem("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");
+            try {
+                //search for gift
+                search.searchItem(General.giftXml);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". search successful");
+            }
+            catch (Exception e){
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". cannot find item");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
         }//end of login
 
         @org.junit.Test
         //choose gift from list test
-        public void test03_chooseGift() throws Exception{
-            myTests = extent.startTest("Choose Gift");
-            myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
+        public void test03_chooseGift() {
+            myTests = extent.startTest("Choose gift");
+            myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + ". started");
             gift = new ChooseGift(driver);
             //choosing gift from list
-            gift.chooseGift("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");
+            try {
+                gift.chooseGift(General.giftXml);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". gift chose");
+            }
+            catch (Exception e){
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". cannot find gift");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
+
         }//end of test03_chooseGift
 
         @org.junit.Test
         //fill information for sending a gift and asserts color and card data test
         public void test04_sendGift() throws Exception{
-            myTests = extent.startTest("Choose Gift");
+            myTests = extent.startTest("Send gift");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
             sendAndReceive = new SenderAndReceiver(driver);
             //fill gift info
-            sendAndReceive.sendGift("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");
+            sendAndReceive.sendGift(General.giftXml);
             //asserts color size of receiver 2
             String colorOfReceiverTab = sendAndReceive.get2Color();
-            //TODO Assert color to xml
+
+            try {
+                Assert.assertEquals(General.readFromFile("colorReceiverTab",General.giftXml),colorOfReceiverTab);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". color is " + colorOfReceiverTab + " correct");
+            }
+            catch (AssertionError e)
+            {
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong color");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
+
             //asserts card data
             String cardSender = sendAndReceive.getCardDataSender();
-            //TODO assert sender to xml
+            try {
+                Assert.assertEquals(General.readFromFile("sender",General.giftXml),cardSender);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". sender is " + cardSender);
+            }
+            catch (AssertionError e)
+            {
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong sender");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
+
             String cardReceiver = sendAndReceive.getCardDataReceiver();
-            //TODO assert receiver to xml
+            try {
+                Assert.assertEquals(General.readFromFile("receiver",General.giftXml),cardReceiver);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". receiver is " + cardReceiver);
+            }
+            catch (AssertionError e)
+            {
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong receiver");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
+
             String cardGreeting = sendAndReceive.getCardDataGreetings();
-            //TODO assert greeting to xml
+            try {
+                Assert.assertEquals(General.readFromFile("blessing",General.giftXml),cardGreeting);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". blessing is " + cardGreeting);
+            }
+            catch (AssertionError e)
+            {
+                myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong blessing");
+                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+            }
+
 
         }//end of test04_sendGift
 
         @org.junit.Test
         //screenshot end of page test
         public void test05_screenEndOfPage() throws Exception {
-            myTests = extent.startTest("screen");
+            myTests = extent.startTest("End of page");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
 
             driver.close();
-            String setBrowser = General.readFromFile("browser","E:\\intellij\\BuyMeProject\\browser.xml");  //xml browser path
+            String setBrowser = General.readFromFile("browser",browserXml);  //xml browser path
             setBrowser(setBrowser);                                                                                        //set browser
             driver.get("https://buyme.co.il/");
 
             search = new SearchGift(driver);
             //roll to end of page
-            search.rollToLastGift("E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml");
+            search.rollToLastGift(General.giftXml);
             //report a screen
             myTests.log(LogStatus.PASS, name.getMethodName() + ". end of page");
             myTests.log(LogStatus.PASS, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
@@ -174,10 +227,10 @@ public class Test {
         //login without credentials test
         public void test06_loginWithoutData() throws Exception {
             //set up driver
-            myTests = extent.startTest("Loading ...");
+            myTests = extent.startTest("Login without data");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
             driver.close();
-            String setBrowser = General.readFromFile("browser","E:\\intellij\\BuyMeProject\\browser.xml");  //xml browser path
+            String setBrowser = General.readFromFile("browser",browserXml);  //xml browser path
             setBrowser(setBrowser);                                                                                        //set browser
 
             login = new Login(driver);
@@ -187,7 +240,7 @@ public class Test {
             //asserts login error messages
             try {
                 Assert.assertEquals(loginExpectedMessage, loginActualMessage);
-                myTests.log(LogStatus.PASS, name.getMethodName() + ". login failed");
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". login unsuccessful, as expected");
                 myTests.log(LogStatus.PASS, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
             catch (AssertionError e) {
@@ -205,7 +258,7 @@ public class Test {
             //get circle object dimension on loading screen
             try {
                 Object point = load.loading();
-                myTests.log(LogStatus.INFO, name.getMethodName() + ". loading point dimension/size is " + point);
+                myTests.log(LogStatus.PASS, name.getMethodName() + ". loading point dimension/size is " + point);
             }
             catch (Exception e){
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". test failed");
@@ -220,7 +273,7 @@ public class Test {
                 switch (userChoice){
                         //Chrome
                         case "Chrome": {
-                                System.out.println("chrome");
+
                                 System.setProperty("webdriver.chrome.driver", "E:\\Selenium\\browser\\chromedriver.exe");
                                 ChromeOptions options = new ChromeOptions();
                                 options.addArguments("-incognito");
@@ -236,8 +289,10 @@ public class Test {
                             FirefoxBinary firefoxBinary = new FirefoxBinary(pathBinary);
                             DesiredCapabilities desired = DesiredCapabilities.firefox();
                             FirefoxOptions options = new FirefoxOptions();
+                            options.addArguments("-private");
                             desired.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options.setBinary(firefoxBinary));
-                            desired.setCapability("browser.privatebrowsing.autostart", true);
+                            desired.setCapability("moz:firefoxOptions",options);
+//                            desired.setCapability("browser.privatebrowsing.autostart", true);
                             driver = new FirefoxDriver(options);            //default path C:\Program Files\Mozilla Firefox\firefox.exe
                 //              driver = new FirefoxDriver();   //default path C:\Program Files\Mozilla Firefox\firefox.exe
                             driver.manage().window().maximize();

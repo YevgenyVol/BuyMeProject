@@ -44,7 +44,7 @@ public class SenderAndReceiver {
         WebElement cardSender;
     @FindBy (css = ".card-text.cut-greeting")
         WebElement cardGreetings;
-
+    private String uploadXml = "E:\\intellij\\BuyMeProject\\upload.jpg";
 
     //constructor
     public SenderAndReceiver(WebDriver driver){
@@ -70,7 +70,7 @@ public class SenderAndReceiver {
         event.click();
         weddingEvent.click();
         General.userText(General.readFromFile("blessing",path), blessing);
-        uploadPicture.sendKeys("E:\\intellij\\BuyMeProject\\upload.jpg");
+        uploadPicture.sendKeys(uploadXml);
         //mail
         mailSend.click();
         if (mailAddress.isEnabled()){

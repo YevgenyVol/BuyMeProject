@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "utf-8" ?>
 <config>
 <name>Haim</name>
-<email>2132akh12147221132@walla.co.il</email>
+<email>2132akh121472211632@walla.co.il</email>
 <password>Asd153wt</password>
-<signUpErrMessage>כל המתנות מחכות לך! אבל קודם צריך מייל וסיסמה</signUpErrMessage>
+<signUpErrMessage>can't login, missing info</signUpErrMessage>
 </config>

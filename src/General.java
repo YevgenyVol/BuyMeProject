@@ -15,9 +15,10 @@ import java.io.IOException;
 public class General {
     static String browserXml = "E:\\intellij\\BuyMeProject\\browser.xml";
     static String signUpXml = "E:\\intellij\\BuyMeProject\\buyMeSignUp1.xml";
+    static String giftXml = "E:\\intellij\\BuyMeProject\\buyMeSignUpSearchValues.xml";
 
     //fill textBox
-    public static void userText(String textValue, WebElement textBox) throws InterruptedException {
+    public static void userText(String textValue, WebElement textBox)  {
         textBox.clear();
         textBox.sendKeys(textValue);
     }//end of userText

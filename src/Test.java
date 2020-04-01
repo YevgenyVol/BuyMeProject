@@ -67,11 +67,9 @@ public class Test {
         }//end closeBrowser - AfterClass
 
 
-
-
         @org.junit.Test
         //sign up to buyMe test
-        public void test01_signUp() throws Exception {
+        public void test01_signUp() {
             driver.get("https://buyme.co.il/");
             myTests = extent.startTest("Sign up");
             myTests.log(LogStatus.INFO, "Test '" + name.getMethodName() + "' started");
@@ -124,7 +122,7 @@ public class Test {
             }
             catch (Exception e){
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". cannot find item");
-                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+                myTests.log(LogStatus.FAIL, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
         }//end of login
 
@@ -141,7 +139,7 @@ public class Test {
             }
             catch (Exception e){
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". cannot find gift");
-                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+                myTests.log(LogStatus.FAIL, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
 
         }//end of test03_chooseGift
@@ -154,20 +152,21 @@ public class Test {
             sendAndReceive = new SenderAndReceiver(driver);
             //fill gift info
             sendAndReceive.sendGift(General.giftXml);
-            //asserts color size of receiver 2
-            String colorOfReceiverTab = sendAndReceive.get2Color();
 
+            //asserts color of receiver 2
+            String colorOfReceiverTab = sendAndReceive.get2Color();
             try {
                 Assert.assertEquals(General.readFromFile("colorReceiverTab",General.giftXml),colorOfReceiverTab);
                 myTests.log(LogStatus.PASS, name.getMethodName() + ". color is " + colorOfReceiverTab + " correct");
             }
             catch (AssertionError e)
             {
-                myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong color");
-                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+                myTests.log(LogStatus.WARNING, name.getMethodName() + ". wrong color, actual color is : " +  colorOfReceiverTab);
+                myTests.log(LogStatus.WARNING, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
 
-            //asserts card data
+            //asserts card data:
+            //asserts card sender
             String cardSender = sendAndReceive.getCardDataSender();
             try {
                 Assert.assertEquals(General.readFromFile("sender",General.giftXml),cardSender);
@@ -176,9 +175,10 @@ public class Test {
             catch (AssertionError e)
             {
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong sender");
-                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+                myTests.log(LogStatus.FAIL, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
 
+            //asserts card receiver
             String cardReceiver = sendAndReceive.getCardDataReceiver();
             try {
                 Assert.assertEquals(General.readFromFile("receiver",General.giftXml),cardReceiver);
@@ -187,9 +187,10 @@ public class Test {
             catch (AssertionError e)
             {
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong receiver");
-                myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
+                myTests.log(LogStatus.FAIL, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
 
+            //asserts card greeting
             String cardGreeting = sendAndReceive.getCardDataGreetings();
             try {
                 Assert.assertEquals(General.readFromFile("blessing",General.giftXml),cardGreeting);
@@ -200,8 +201,6 @@ public class Test {
                 myTests.log(LogStatus.FAIL, name.getMethodName() + ". wrong blessing");
                 myTests.log(LogStatus.ERROR, "", myTests.addScreenCapture(General.takeScreenShot(imagePath + "\\" + System.currentTimeMillis(), driver)));
             }
-
-
         }//end of test04_sendGift
 
         @org.junit.Test

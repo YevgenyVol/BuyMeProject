@@ -1,4 +1,3 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -6,16 +5,11 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.EventObject;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 
 //registration to buyMe
 public class RegistrationScreen {
 
     WebDriver driver;
-    static String imagePath = "E:\\intellij\\BuyMeProject\\Screenshots\\RegistrationScreen";
     //login links
     @FindBy (css = ".seperator-link")
         WebElement signUpEnterToWebButton;
@@ -40,7 +34,7 @@ public class RegistrationScreen {
     }//end of constructor
 
     //sign up to web
-    public String signUpToBuyMe(String path) throws Exception {
+    public String signUpToBuyMe(String path) {
         WebDriverWait wait = new WebDriverWait(driver,3);
         //enter to sign up screen
         signUpEnterToWebButton.click();    //enter&sign up button

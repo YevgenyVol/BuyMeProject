@@ -17,13 +17,13 @@ public class Loading {
     }//end of constructor
 
     //returns loading screen element circle size
-    public Object loading() throws InterruptedException {
+    public Object loading(){
             driver.manage().timeouts().pageLoadTimeout(1, TimeUnit.SECONDS);
             try {
                 driver.get("https://buyme.co.il/");
                 return "";
             }
-            catch (Exception e){
+            catch (TimeoutException e){
                 return loadingElementBounce.getSize();
             }
     }//end of loading
